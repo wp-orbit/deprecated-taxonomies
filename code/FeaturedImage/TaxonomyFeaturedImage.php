@@ -30,9 +30,6 @@ class TaxonomyFeaturedImage
      */
     protected $bindings = [];
 
-    /**
-     *
-     */
     protected function addFormFields()
     {
     }
@@ -84,7 +81,41 @@ class TaxonomyFeaturedImage
      */
     public static function bind( $taxonomy, array $postTypes = [] )
     {
+        $self = static::getInstance();
 
+        // Get bindings by taxonomy.
+        $bindings = $self->getBindingsByTaxonomy( $taxonomy );
+
+        // No bindings found.
+        if ( empty ( $bindings ) )
+        {
+            // Create the binding.
+            $binding = new TaxonomyFeaturedImageBinding( $taxonomy, $postTypes );
+
+            // Push to object.
+            $self->bindings[] = $binding;
+
+            // We're done.
+            return;
+        }
+
+        // Loop through bindings.
+        foreach( $bindings as &$binding )
+        {
+            // This binding matches our taxonomy term.
+            if ( $taxonomy == $binding->taxonomy )
+            {
+                // Loop through current binding's post types.
+                foreach( $postTypes as $postType )
+                {
+                    // Add this post type to the binding.
+                    if ( ! in_array( $postType, $binding->postTypes ) )
+                    {
+                        $binding->postTypes[] = $postType;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -93,6 +124,36 @@ class TaxonomyFeaturedImage
      */
     public static function unbind( $taxonomy, array $postTypes = [] )
     {
+        $self = static::getInstance();
 
+        // Loop through bindings.
+        foreach( $self->bindings as $key => $binding )
+        {
+            // Match the taxonomy.
+            if ( $taxonomy === $binding->taxonomy )
+            {
+                // No post types were supplied, so remove any matching instances of the taxonomy.
+                if ( empty( $postTypes ) )
+                {
+                    // Unset the item.
+                    unset( $self->bindings[$key] );
+                }
+
+                // We need to check against post types in addition to the taxonomy key.
+                else
+                {
+                    // Loop through post types.
+                    foreach( $postTypes as $postType )
+                    {
+                        // Is the post type in the binding?
+                        if ( in_array( $postType, $binding->postTypes ) )
+                        {
+                            // Unset the item.
+                            unset( $self->bindings[$key] );
+                        }
+                    }
+                }
+            }
+        }
     }
 }
