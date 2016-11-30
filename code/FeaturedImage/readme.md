@@ -3,7 +3,7 @@ via *[WP Orbit](https://github.com/wp-orbit)*::[Taxonomy](https://github.com/wp-
 
 The WP Orbit - Taxonomy - Featured Image subpackage exposes a standalone class 
 **TaxonomyFeaturedImage** which serves as a container through which *Featured Images* 
-can be hooked to taxonomy.
+can be hooked to any taxonomy.
 
 Example usage in your plugin or theme:
 

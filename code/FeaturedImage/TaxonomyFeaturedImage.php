@@ -207,49 +207,58 @@ class TaxonomyFeaturedImage
     }
 
     /**
-     * Binds featured image support for a given taxonomy (and post types, if supplied).
-     * @param string $taxonomy The taxonomy key we want to add featured images to.
+     * Binds featured image support for specified taxonomies (and post types, if supplied).
+     * @param string|array $taxonomies The key or an array of taxonomy keys we want to add featured images to.
      * @param array $postTypes Specifies which specific post types should per taxonomy should
      * get featured image support. If left empty, will support all post types.
      */
-    public static function bind( $taxonomy, array $postTypes = [] )
+    public static function bind( $taxonomies, array $postTypes = [] )
     {
         $self = static::getInstance();
 
-        // Get bindings by taxonomy.
-        $bindings = $self->getBindingsByTaxonomy( $taxonomy );
-
-        // No bindings found.
-        if ( empty ( $bindings ) )
-        {
-            // Create the binding.
-            $binding = new TaxonomyFeaturedImageBinding( $taxonomy, $postTypes );
-
-            // Push to object.
-            $self->bindings[] = $binding;
-
-            // We're done.
-            return;
+        // If a sting was passed as $taxonomies, make array.
+        if (is_string($taxonomies)) {
+            $taxonomies = [$taxonomies];
         }
 
-        // Loop through bindings.
-        foreach( $bindings as &$binding )
+        foreach ( $taxonomies as $taxonomy )
         {
-            // This binding matches our taxonomy term.
-            if ( $taxonomy == $binding->taxonomy )
+            // Get bindings by taxonomy.
+            $bindings = $self->getBindingsByTaxonomy( $taxonomy );
+
+            // No bindings found.
+            if ( empty ( $bindings ) )
             {
-                // Loop through current binding's post types.
-                foreach( $postTypes as $postType )
+                // Create the binding.
+                $binding = new TaxonomyFeaturedImageBinding( $taxonomy, $postTypes );
+
+                // Push to object.
+                $self->bindings[] = $binding;
+
+                // We're done.
+                return;
+            }
+
+            // Loop through bindings.
+            foreach( $bindings as &$binding )
+            {
+                // This binding matches our taxonomy term.
+                if ( $taxonomy == $binding->taxonomy )
                 {
-                    // Add this post type to the binding.
-                    if ( ! in_array( $postType, $binding->postTypes ) )
+                    // Loop through current binding's post types.
+                    foreach( $postTypes as $postType )
                     {
-                        $binding->postTypes[] = $postType;
+                        // Add this post type to the binding.
+                        if ( ! in_array( $postType, $binding->postTypes ) )
+                        {
+                            $binding->postTypes[] = $postType;
+                        }
                     }
                 }
             }
         }
     }
+
 
     /**
      * @param string $taxonomy The taxonomy key we want to remove featured images from.
