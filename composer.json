@@ -1,0 +1,19 @@
+{
+  "name": "wp-orbit/taxonomy",
+  "description": "WordPress taxonomy helpers.",
+  "type": "wordpress-plugin-component",
+  "authors": [
+    {
+      "name": "Marty Eason",
+      "email": "dev@zawntech.com",
+      "role": "Developer",
+      "homepage": "http://zawntech.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Zawntech\\WordPress\\Orbit\\Taxonomy\\": "/code"
+    }
+  }
+}
