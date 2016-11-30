@@ -1,5 +1,5 @@
 <?php
-namespace Zawntech\WordPress\Orbit\Taxonomy;
+namespace Zawntech\WordPress\Orbit\Taxonomy\FeaturedImage;
 
 /**
  * Adds a "featured image" to taxonomy terms.
@@ -43,7 +43,7 @@ class TaxonomyFeaturedImage
     }
 
     /**
-     * @param $taxonomy
+     * @param string $taxonomy
      * @return TaxonomyFeaturedImageBinding[]
      */
     public function getBindingsByTaxonomy( $taxonomy )
@@ -54,7 +54,7 @@ class TaxonomyFeaturedImage
         // Loop through bindings.
         foreach( $this->bindings as $binding )
         {
-            // Is this
+            // Match the taxonomy name against
             if ( $binding->taxonomy == $taxonomy )
             {
                 // Push this binding.
@@ -77,11 +77,12 @@ class TaxonomyFeaturedImage
     }
 
     /**
+     * Binds featured image support for a given taxonomy (and post types, if supplied).
      * @param string $taxonomy The taxonomy key we want to add featured images to.
      * @param array $postTypes Specifies which specific post types should per taxonomy should
      * get featured image support. If left empty, will support all post types.
      */
-    public static function addFeaturedImageSupport( $taxonomy, array $postTypes = [] )
+    public static function bind( $taxonomy, array $postTypes = [] )
     {
 
     }
@@ -90,7 +91,7 @@ class TaxonomyFeaturedImage
      * @param string $taxonomy The taxonomy key we want to remove featured images from.
      * @param array $postTypes
      */
-    public static function removeFeaturedImageSupport( $taxonomy, array $postTypes = [] )
+    public static function unbind( $taxonomy, array $postTypes = [] )
     {
 
     }

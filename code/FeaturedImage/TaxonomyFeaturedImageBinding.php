@@ -1,5 +1,5 @@
 <?php
-namespace Zawntech\WordPress\Orbit\Taxonomy;
+namespace Zawntech\WordPress\Orbit\Taxonomy\FeaturedImage;
 
 /**
  * Class TaxonomyFeaturedImageBinding
