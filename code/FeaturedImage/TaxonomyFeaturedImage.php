@@ -1,10 +1,10 @@
 <?php
-namespace Zawntech\WordPress\Orbit\Taxonomy\FeaturedImage;
+namespace WPOrbit\Taxonomy\FeaturedImage;
 
 /**
  * Adds a "featured image" to taxonomy terms.
  * Class TaxonomyFeaturedImage
- * @package Zawntech\WordPress\Orbit\Taxonomy
+ * @package WPOrbit\Taxonomy
  */
 class TaxonomyFeaturedImage
 {
@@ -82,7 +82,9 @@ class TaxonomyFeaturedImage
                         imageContainer.html('');
                         imageIdInput.val('');
                         imageIdInput.attr('value', '');
+                        removeButton.hide();
                     });
+
                 });
             })(jQuery);
         </script>
@@ -97,11 +99,12 @@ class TaxonomyFeaturedImage
         wp_enqueue_media();
         ?>
         <div class="form-field">
-            <label for="taxonomy_featured_image"><?php _e( 'Taxonomy Featured Image:', 'wp-orbit' ); ?></label>
+            <label for="taxonomy_featured_image"><?php _e( 'Taxonomy Featured Image', 'wp-orbit' ); ?></label>
             <input type="hidden" name="taxonomy_featured_image" id="taxonomy_featured_image" value="">
             <div id="image-container"></div>
-            <input class="button button-primary" id="select_taxonomy_image" type="button" value="Select/Upload Image" />
-            <input class="button" id="remove_taxonomy_image" type="button" value="Remove Image" />
+            <input class="button button-primary" id="select_taxonomy_image" type="button" value="Set Image" />
+            <input class="button" id="remove_taxonomy_image" type="button" value="Remove Image" style="display: none;" />
+            <p>Set a featured image for this taxonomy.</p>
         </div>
         <?php
         $this->_script();
@@ -130,7 +133,7 @@ class TaxonomyFeaturedImage
                 </div>
                 <input class="button button-primary" id="select_taxonomy_image" type="button" value="Select/Upload Image" />
                 <input class="button" id="remove_taxonomy_image" type="button" value="Remove Image" style="<?php
-                    echo ! is_numeric( $imageId ) ? 'display: none;' : 'display: block;' ?>">
+                    echo $imageId ? 'display: block;' : 'display: none;'; ?>">
             </td>
         </tr>
         <?php

@@ -9,7 +9,7 @@ Example usage in your plugin or theme:
 
 ```php
 <?php
-use Zawntech\WordPress\Orbit\Taxonomy\FeaturedImage\TaxonomyFeaturedImage;
+use WPOrbit\Taxonomy\FeaturedImage\TaxonomyFeaturedImage;
 
 // This is how we add featured image support to categories.
 TaxonomyFeaturedImage::bind( 'category' );
