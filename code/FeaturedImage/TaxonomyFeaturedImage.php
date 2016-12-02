@@ -42,6 +42,7 @@ class TaxonomyFeaturedImage
                     var imageContainer = $('#image-container'),
                         imageIdInput = $('#taxonomy_featured_image'),
                         uploadButton = $('#select_taxonomy_image'),
+                        removeButton = $('#remove_taxonomy_image'),
                         frame = new wp.media.view.MediaFrame.Select({
                             title: 'Select taxonomy image',
                             multiple: false,
@@ -70,10 +71,17 @@ class TaxonomyFeaturedImage
                         imageContainer.html('<img src="' + imageUrl + '">');
                         imageIdInput.val(imageId);
                         imageIdInput.attr('value', imageId);
+                        removeButton.show();
                     });
 
                     uploadButton.on( 'click', function() {
                         frame.open();
+                    });
+
+                    removeButton.on( 'click', function() {
+                        imageContainer.html('');
+                        imageIdInput.val('');
+                        imageIdInput.attr('value', '');
                     });
                 });
             })(jQuery);
@@ -93,6 +101,7 @@ class TaxonomyFeaturedImage
             <input type="hidden" name="taxonomy_featured_image" id="taxonomy_featured_image" value="">
             <div id="image-container"></div>
             <input class="button button-primary" id="select_taxonomy_image" type="button" value="Select/Upload Image" />
+            <input class="button" id="remove_taxonomy_image" type="button" value="Remove Image" />
         </div>
         <?php
         $this->_script();
@@ -113,13 +122,15 @@ class TaxonomyFeaturedImage
         <tr class="form-field term-slug-wrap">
             <th scope="row"><label for="slug">Featured Image</label></th>
             <td>
-                <input type="hidden" name="taxonomy_featured_image" id="taxonomy_featured_image" value="">
+                <input type="hidden" name="taxonomy_featured_image" id="taxonomy_featured_image" value="<?php echo $imageId; ?>">
                 <div id="image-container">
                     <?php if ( $imageId ) : ?>
                         <img src="<?php echo $imageUrl; ?>">
                     <?php endif; ?>
                 </div>
                 <input class="button button-primary" id="select_taxonomy_image" type="button" value="Select/Upload Image" />
+                <input class="button" id="remove_taxonomy_image" type="button" value="Remove Image" style="<?php
+                    echo ! is_numeric( $imageId ) ? 'display: none;' : 'display: block;' ?>">
             </td>
         </tr>
         <?php
