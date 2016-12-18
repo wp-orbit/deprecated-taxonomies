@@ -1,5 +1,5 @@
 <?php
-namespace WPOrbit\Taxonomy\FeaturedImage;
+namespace WPOrbit\Taxonomies\FeaturedImages;
 
 /**
  * Adds a "featured image" to taxonomy terms.

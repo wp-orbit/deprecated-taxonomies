@@ -1,5 +1,5 @@
 {
-    "name": "wp-orbit/taxonomy",
+    "name": "wp-orbit/taxonomies",
     "description": "WordPress taxonomy helpers.",
     "type": "wordpress-plugin-component",
     "authors": [
@@ -13,7 +13,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "WPOrbit\\Taxonomy\\": "/code"
+            "WPOrbit\\Taxonomies\\": "/code"
         }
     }
 }
