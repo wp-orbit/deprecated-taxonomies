@@ -5,7 +5,7 @@ namespace WPOrbit\Taxonomies;
  * Provides an extensible class for registering custom taxonomies to post type(s).
  *
  * Class Taxonomy
- * @package Zawntech\WordPress\Taxonomies
+ * @package WPOrbit\Taxonomies
  */
 class Taxonomy
 {
