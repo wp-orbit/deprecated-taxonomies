@@ -195,6 +195,24 @@ class Taxonomy
     }
 
     /**
+     * Prevents the taxonomy from displaying in the quick edit menu when editing a post.
+     */
+    protected function hideFromQuickEdit()
+    {
+        // Hide from quick edit.
+        add_filter( 'quick_edit_show_taxonomy', function( $show, $taxonomy, $postType )
+        {
+            // Only affect email address taxonomies.
+            if ( $taxonomy !== $this->getKey() )
+            {
+                return $show;
+            }
+
+            return false;
+        }, 10, 3 );
+    }
+
+    /**
      * @var static
      */
     protected static $instance;
