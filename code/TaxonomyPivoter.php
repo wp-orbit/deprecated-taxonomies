@@ -1,6 +1,11 @@
 <?php
 namespace WPOrbit\Taxonomies;
 
+/**
+ * Class TaxonomyPivoter
+ *
+ * @package WPOrbit\Taxonomies
+ */
 class TaxonomyPivoter
 {
     /**
@@ -109,14 +114,50 @@ class TaxonomyPivoter
         return $this;
     }
 
+    /**
+     * Returns a list of related IDs.
+     * @return array
+     */
     public function getIds()
     {
-        return wp_get_object_terms( $this->parentId, $this->taxonomy );
+        // Array for output.
+        $relatedIds = [];
+
+        // Get terms.
+        $terms = wp_get_object_terms( $this->parentId, $this->taxonomy );
+
+        // Error fetching terms.
+        if ( is_wp_error( $this ) ) {
+            return [];
+        }
+
+        // Extract IDs stored as term names.
+        foreach( $terms as $term ) {
+            /** @var $term \WP_Term */
+            $relatedIds[] = $term->name;
+        }
+
+        // Return array.
+        return $relatedIds;
     }
 
-    public function __construct( $postId, $taxonomy )
+    /**
+     * TaxonomyPivoter constructor.
+     *
+     * @param $postId int Parent post ID.
+     * @param $taxonomy string The taxonomy name through which relationships are established.
+     * @param $context string The data type of the pivoted IDs ('post' or 'user').
+     */
+    public function __construct( $postId, $taxonomy, $context = 'post' )
     {
         $this->parentId = $postId;
         $this->taxonomy = $taxonomy;
+
+        if ( 'post' == $context ) {
+            $this->pivotPosts();
+        }
+        if ( 'user' == $context ) {
+            $this->pivotUsers();
+        }
     }
 }
