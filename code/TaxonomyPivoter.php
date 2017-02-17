@@ -24,12 +24,18 @@ class TaxonomyPivoter
     protected $pivotContext = 'post';
 
     /**
+     * @var string
+     */
+    protected $postType = 'post';
+
+    /**
      * Establish post relationships.
      * @return $this
      */
-    public function pivotPosts()
+    public function pivotPosts( $postType = 'post' )
     {
         $this->pivotContext = 'post';
+        $this->postType = $postType;
         return $this;
     }
 
@@ -132,7 +138,8 @@ class TaxonomyPivoter
         }
 
         // Extract IDs stored as term names.
-        foreach( $terms as $term ) {
+        foreach( $terms as $term )
+        {
             /** @var $term \WP_Term */
             $relatedIds[] = $term->name;
         }
@@ -156,6 +163,7 @@ class TaxonomyPivoter
         if ( 'post' == $context ) {
             $this->pivotPosts();
         }
+
         if ( 'user' == $context ) {
             $this->pivotUsers();
         }
