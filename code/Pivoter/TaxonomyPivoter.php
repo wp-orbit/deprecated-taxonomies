@@ -1,5 +1,5 @@
 <?php
-namespace WPOrbit\Taxonomies;
+namespace WPOrbit\Taxonomies\Pivoter;
 
 /**
  * Class TaxonomyPivoter
