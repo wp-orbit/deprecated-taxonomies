@@ -1,6 +1,5 @@
 # Taxonomy Pivoter
-
-The TaxonomyPivoter class utilizes WordPress's taxonomy system to establish relationships between:
+The TaxonomyPivoter class utilizes WordPress's taxonomy system to establish custom relationships between:
 
 - posts and posts
 - posts and users
@@ -8,7 +7,8 @@ The TaxonomyPivoter class utilizes WordPress's taxonomy system to establish rela
 ### How It Works
 
 - Each type of relationship should have its own taxonomy name; for example: **books-authors**
-- The presence of an object's ID (post or user) as a taxonomy term indicates a relationship.
+- The presence of an object's ID (post or user) as a taxonomy term indicates a relationship between
+  the two pivoting objects. 
 - The absence of the ID means there is no relationship.
 
 ### Example Use Cases
@@ -36,7 +36,6 @@ $pivoter->hasRelation( $authorPostId );
 // Remove author from book.
 $pivoter->removeRelation( $authorPostId );
 ```
-
 
 **Post to User**
 
