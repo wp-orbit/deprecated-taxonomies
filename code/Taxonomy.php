@@ -104,6 +104,15 @@ class Taxonomy
         return $this->plural;
     }
 
+    /**
+     * An array of post types to which this taxonomy is registered.
+     * @return array
+     */
+    public function getPostTypes()
+    {
+        return $this->postTypes;
+    }
+
     protected function validateTaxonomy()
     {
         // Class name.
