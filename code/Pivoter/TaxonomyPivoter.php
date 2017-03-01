@@ -133,7 +133,7 @@ class TaxonomyPivoter
         $terms = wp_get_object_terms( $this->parentId, $this->taxonomy );
 
         // Error fetching terms.
-        if ( is_wp_error( $this ) ) {
+        if ( is_wp_error( $terms ) ) {
             return [];
         }
 
@@ -141,7 +141,7 @@ class TaxonomyPivoter
         foreach( $terms as $term )
         {
             /** @var $term \WP_Term */
-            $relatedIds[] = $term->name;
+            $relatedIds[] = (int) $term->name;
         }
 
         // Return array.
@@ -221,6 +221,10 @@ class TaxonomyPivoter
         // Get IDs.
         $postIds = $pivoter->getIds();
 
+        if ( empty( $postIds ) ) {
+            return [];
+        }
+
         $args = [
             'post_type' => $postType,
             'post__in'  => $postIds,
@@ -228,14 +232,14 @@ class TaxonomyPivoter
             'nopaging'  => true
         ];
 
-        // Prepare WordPress query.
-        $query = new \WP_Query( $args );
-
         // Provide a filter for fetching pivotable posts.
         $args = apply_filters( 'get_pivoted_direct_post_args', $args, $postId, $taxonomy, $postType );
 
+        // Prepare WordPress query.
+        $query = new \WP_Query( $args );
+
         // No people.
-        if ( empty( $query->posts ) )
+        if ( empty( $query->get_posts() ) )
         {
             return [];
         }
