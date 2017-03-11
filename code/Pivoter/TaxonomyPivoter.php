@@ -19,6 +19,16 @@ class TaxonomyPivoter
     protected $taxonomy;
 
     /**
+     * @var bool
+     */
+    protected $inversePivot = false;
+
+    /**
+     * @var string
+     */
+    protected $inversePostType;
+
+    /**
      * @var string The type of pivot context-- 'post' or 'user'.
      */
     protected $pivotContext = 'post';
@@ -50,12 +60,24 @@ class TaxonomyPivoter
     }
 
     /**
+     * @param string $postType
+     */
+    public function inversePivot( $postType ) {
+        $this->inversePivot = true;
+        $this->inversePostType = $postType;
+    }
+
+    /**
      * @param $id
      * @return bool
      */
     public function hasRelation( $id )
     {
-        return has_term( (string) $id, $this->taxonomy, $this->parentId );
+        if ( $this->inversePivot ) {
+            return has_term( $this->parentId, $this->taxonomy, (string) $id );
+        } else {
+            return has_term( (string) $id, $this->taxonomy, $this->parentId );
+        }
     }
 
     /**
@@ -70,15 +92,23 @@ class TaxonomyPivoter
             return $this;
         }
 
+        if ( $this->inversePivot ) {
+            $parentId = (string) $id;
+            $childId = $this->parentId;
+        } else {
+            $parentId = $this->parentId;
+            $childId = (string) $id;
+        }
+
         // Get the term we want to add.
-        $term = get_term_by( 'name', $id, $this->taxonomy );
+        $term = get_term_by( 'name', $childId, $this->taxonomy );
 
         // Invalid term.
         if ( ! $term )
         {
             // Create the term.
             $term = wp_insert_term(
-                (string) $id,
+                $childId,
                 $this->taxonomy
             );
 
@@ -91,7 +121,7 @@ class TaxonomyPivoter
         }
 
         // Add the term ID.
-        wp_add_object_terms( $this->parentId, $termId, $this->taxonomy );
+        wp_add_object_terms( $parentId, $termId, $this->taxonomy );
 
         return $this;
     }
@@ -108,14 +138,23 @@ class TaxonomyPivoter
             return $this;
         }
 
+        if ( $this->inversePivot )
+        {
+            $parentId = (string) $id;
+            $childId = $this->parentId;
+        } else {
+            $parentId = $this->parentId;
+            $childId = (string) $id;
+        }
+
         // Get the term we want to add.
-        $term = get_term_by( 'name', $id, $this->taxonomy );
+        $term = get_term_by( 'name', $childId, $this->taxonomy );
 
         if ( ! $term ) {
             return $this;
         }
 
-        wp_remove_object_terms( $this->parentId, $term->term_id, $this->taxonomy );
+        wp_remove_object_terms( $parentId, $term->term_id, $this->taxonomy );
 
         return $this;
     }
@@ -129,19 +168,38 @@ class TaxonomyPivoter
         // Array for output.
         $relatedIds = [];
 
-        // Get terms.
-        $terms = wp_get_object_terms( $this->parentId, $this->taxonomy );
+        // Get direct relationship IDs.
+        if ( ! $this->inversePivot )
+        {
+            // Get terms.
+            $terms = wp_get_object_terms( $this->parentId, $this->taxonomy );
 
-        // Error fetching terms.
-        if ( is_wp_error( $terms ) ) {
-            return [];
+            // Error fetching terms.
+            if ( is_wp_error( $terms ) )
+            {
+                return [];
+            }
+
+            // Extract IDs stored as term names.
+            foreach ( $terms as $term )
+            {
+                /** @var $term \WP_Term */
+                $relatedIds[] = (int) $term->name;
+            }
         }
 
-        // Extract IDs stored as term names.
-        foreach( $terms as $term )
+        // Get inverse relationship IDs.
+        else
         {
-            /** @var $term \WP_Term */
-            $relatedIds[] = (int) $term->name;
+            $posts = static::getPivotedParentPosts(
+                $this->parentId,
+                $this->taxonomy,
+                $this->postType
+            );
+
+            foreach( $posts as $post ) {
+                $relatedIds[] = $post->ID;
+            }
         }
 
         // Return array.
@@ -243,6 +301,8 @@ class TaxonomyPivoter
         {
             return [];
         }
+
+
 
         return $query->posts;
     }
